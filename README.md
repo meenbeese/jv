@@ -4,10 +4,20 @@ Java Tool is a command-line utility designed to manage Java versions and facilit
 
 ## Features
 
-- **Manage Java Versions**: Easily list, install, and set default Java versions.
-- **Compile Java Programs**: Compile Java source files using the `javac` command.
-- **Execute Java Programs**: Run compiled Java programs with the `java` command and capture output.
-- **File Operations**: Utility functions to check file existence, write to files, and remove files.
+- **Cross-Platform Support**: Works on Windows, macOS, and Linux
+- **Flexible Version Management**: Supports multiple version managers:
+  - jEnv (macOS/Linux)
+  - Jabba (all platforms)
+  - Manual management with environment variables (Windows fallback)
+- **Compile Java Programs**: Compile Java source files using the `javac` command
+- **Execute Java Programs**: Run compiled Java programs with the `java` command
+- **File Operations**: Utility functions for file management
+
+## Prerequisites
+
+- **Windows**: Java installation, optionally Jabba
+- **macOS**: Java installation, jEnv or Jabba recommended
+- **Linux**: Java installation, jEnv or Jabba recommended
 
 ## Installation
 
@@ -19,7 +29,7 @@ Java Tool is a command-line utility designed to manage Java versions and facilit
    ```
    cd jv
    ```
-3. Ensure you have Nim installed on your system. You can download it from [Nim's official website](https://nim-lang.org/).
+3. Install Nim from [Nim's official website](https://nim-lang.org/)
 4. Build the project:
    ```
    nim compile --run src/main.nim
@@ -27,45 +37,39 @@ Java Tool is a command-line utility designed to manage Java versions and facilit
 
 ## Usage
 
-To use jv, run the following command in your terminal:
-
 ```
 jv <command> [options]
 ```
 
 ### Commands
 
-- `compile`: Compiles a Java file.
-- `execute`: Executes a compiled Java program.
-- `manage`: Manages installed Java versions (list, install, set).
+- `compile`: Compiles a Java file
+- `execute`: Executes a compiled Java program
+- `manage`: Manages Java versions
 
 ## Examples
 
-- Compile a Java file:
-  ```
-  jv compile MyProgram.java
-  ```
+Compile a Java file:
+```
+jv compile MyProgram.java
+```
 
-- Execute a compiled Java program:
-  ```
-  jv execute MyProgram
-  ```
+Execute a compiled Java program:
+```
+jv execute MyProgram
+```
 
-- Manage Java versions:
-  ```
-  jv manage list
-  ```
-  ```
-  jv manage install 11
-  ```
-  ```
-  jv manage set 11
-  ```
+Manage Java versions:
+```
+jv manage list
+jv manage install 11
+jv manage set 11
+```
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+MIT License - see LICENSE file for details.

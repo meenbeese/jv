@@ -1,5 +1,6 @@
 import std/os
 import std/strutils
+import ../utils/shell_commands
 
 proc executeJava(javaClass: string): int =
     if not javaClass.endsWith(".class"):
@@ -10,7 +11,13 @@ proc executeJava(javaClass: string): int =
         echo "Error: Class file not found: ", javaClass
         return 1
 
-    let runCommand = "java " & javaClass.stripSuffix(".class")
+    let javaCmd = when defined(windows):
+        let javaPath = getEnv("JAVA_HOME", "") / "bin" / "java.exe"
+        if fileExists(javaPath): javaPath else: "java.exe"
+    else:
+        "java"
+
+    let runCommand = javaCmd & " " & javaClass.stripSuffix(".class")
     let result = execShellCmd(runCommand)
 
     if result == 0:
