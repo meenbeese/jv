@@ -16,8 +16,8 @@ proc runTests(): int =
     return 0
 
 proc main() =
-    if paramCount() < 2:
-        echo "Usage: java-tool <command> [options]"
+    if paramCount() < 1:
+        echo "Usage: jv <command> [options]"
         quit(1)
 
     let command = paramStr(1)
@@ -26,18 +26,18 @@ proc main() =
     of "test":
         quit(runTests())
     of "compile":
-        if paramCount() != 3:
-            echo "Usage: java-tool compile <javaFile>"
+        if paramCount() != 2:
+            echo "Usage: jv compile <javaFile>"
             quit(1)
         quit(compileJava(paramStr(2)))
     of "execute":
-        if paramCount() != 3:
-            echo "Usage: java-tool execute <className>"
+        if paramCount() != 2:
+            echo "Usage: jv execute <className>"
             quit(1)
         quit(executeJava(paramStr(2)))
     of "manage":
-        if paramCount() < 3:
-            echo "Usage: java-tool manage <subcommand> [options]"
+        if paramCount() < 2:
+            echo "Usage: jv manage <list|install|set> [version]"
             quit(1)
         let subcommand = paramStr(2)
         case subcommand:
@@ -47,8 +47,8 @@ proc main() =
                 echo version
             quit(0)
         of "install":
-            if paramCount() != 4:
-                echo "Usage: java-tool manage install <version>"
+            if paramCount() != 3:
+                echo "Usage: jv manage install <version>"
                 quit(1)
             if installVersion(paramStr(3)):
                 echo "Successfully installed Java ", paramStr(3)
@@ -57,8 +57,8 @@ proc main() =
                 echo "Failed to install Java ", paramStr(3)
                 quit(1)
         of "set":
-            if paramCount() != 4:
-                echo "Usage: java-tool manage set <version>"
+            if paramCount() != 3:
+                echo "Usage: jv manage set <version>"
                 quit(1)
             if setVersion(paramStr(3)):
                 echo "Successfully set Java version to ", paramStr(3)
