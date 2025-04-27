@@ -1,8 +1,8 @@
-import std/os
+import std/os except execShellCmd
 import std/strutils
 import ../utils/shell_commands
 
-proc executeJava(javaClass: string): int =
+proc executeJava*(javaClass: string): int =
     if not javaClass.endsWith(".class"):
         echo "Error: The input file must have a .class extension"
         return 1
@@ -17,12 +17,13 @@ proc executeJava(javaClass: string): int =
     else:
         "java"
 
-    let runCommand = javaCmd & " " & javaClass.stripSuffix(".class")
-    let result = execShellCmd(runCommand)
+    let className = javaClass.replace(".class", "")
+    let runCommand = javaCmd & " " & className
+    let exitCode = execShellCmd(runCommand)
 
-    if result == 0:
+    if exitCode == 0:
         echo "Execution successful."
     else:
-        echo "Execution failed with exit code: ", result
+        echo "Execution failed with exit code: ", exitCode
 
-    return result
+    return exitCode

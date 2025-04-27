@@ -1,8 +1,8 @@
-import std/os
+import std/os except execShellCmd
 import std/strutils
 import ../utils/shell_commands
 
-proc compileJava(javaFile: string): int =
+proc compileJava*(javaFile: string): int =
     if not javaFile.endsWith(".java"):
         echo "Error: The input file must have a .java extension"
         return 1
@@ -18,11 +18,11 @@ proc compileJava(javaFile: string): int =
         "javac"
 
     let compileCommand = javacCmd & " " & javaFile
-    let result = execShellCmd(compileCommand)
+    let exitCode = execShellCmd(compileCommand)
 
-    if result == 0:
+    if exitCode == 0:
         echo "Compilation successful."
     else:
-        echo "Compilation failed with exit code: ", result
+        echo "Compilation failed with exit code: ", exitCode
 
-    return result
+    return exitCode

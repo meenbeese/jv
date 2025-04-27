@@ -1,17 +1,18 @@
-import std/os
+import std/os except execShellCmd
 import std/strutils
 import commands/compile
 import commands/execute
 import commands/manage_versions
+import utils/shell_commands
 
 proc runTests(): int =
     for kind, path in walkDir("tests"):
         if kind == pcFile and path.endsWith(".nim"):
             echo "Running test: ", path
-            let result = execShellCmd("nim c -r " & path)
-            if result != 0:
+            let exitCode = execShellCmd("nim c -r " & path)
+            if exitCode != 0:
                 echo "Test failed: ", path
-                return 1
+                return exitCode
     return 0
 
 proc main() =
@@ -28,29 +29,43 @@ proc main() =
         if paramCount() != 3:
             echo "Usage: java-tool compile <javaFile>"
             quit(1)
-        compileJava(paramStr(2))
+        quit(compileJava(paramStr(2)))
     of "execute":
         if paramCount() != 3:
             echo "Usage: java-tool execute <className>"
             quit(1)
-        executeJava(paramStr(2))
+        quit(executeJava(paramStr(2)))
     of "manage":
         if paramCount() < 3:
             echo "Usage: java-tool manage <subcommand> [options]"
             quit(1)
         let subcommand = paramStr(2)
-        if subcommand == "list":
-            listVersions()
-        elif subcommand == "install":
+        case subcommand:
+        of "list":
+            let versions = listVersions()
+            for version in versions:
+                echo version
+            quit(0)
+        of "install":
             if paramCount() != 4:
                 echo "Usage: java-tool manage install <version>"
                 quit(1)
-            installVersion(paramStr(3))
-        elif subcommand == "set":
+            if installVersion(paramStr(3)):
+                echo "Successfully installed Java ", paramStr(3)
+                quit(0)
+            else:
+                echo "Failed to install Java ", paramStr(3)
+                quit(1)
+        of "set":
             if paramCount() != 4:
                 echo "Usage: java-tool manage set <version>"
                 quit(1)
-            setVersion(paramStr(3))
+            if setVersion(paramStr(3)):
+                echo "Successfully set Java version to ", paramStr(3)
+                quit(0)
+            else:
+                echo "Failed to set Java version to ", paramStr(3)
+                quit(1)
         else:
             echo "Unknown manage subcommand: ", subcommand
             quit(1)

@@ -1,4 +1,4 @@
-import std/os
+import std/os except execShellCmd, execCmdEx
 import std/strutils
 import ../utils/shell_commands
 
@@ -19,7 +19,7 @@ proc getVersionManager(): JavaVersionManager =
             return Jabba
         return Manual
 
-proc listVersions(): seq[string] =
+proc listVersions*(): seq[string] =
     case getVersionManager()
     of JEnv:
         let output = execCmdEx("jenv versions")
@@ -40,7 +40,7 @@ proc listVersions(): seq[string] =
                 return output.output.splitLines()
     return @[]
 
-proc installVersion(version: string): bool =
+proc installVersion*(version: string): bool =
     case getVersionManager()
     of JEnv:
         return execShellCmd("jenv add " & version) == 0
@@ -50,7 +50,7 @@ proc installVersion(version: string): bool =
         echo "Please install Java " & version & " manually from https://adoptium.net"
         return false
 
-proc setVersion(version: string): bool =
+proc setVersion*(version: string): bool =
     case getVersionManager()
     of JEnv:
         return execShellCmd("jenv global " & version) == 0

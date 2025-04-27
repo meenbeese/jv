@@ -1,5 +1,5 @@
-import std/os
 import std/osproc
+import std/strutils
 
 proc normalizeCmd(cmd: string): string =
     when defined(windows):
