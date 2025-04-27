@@ -4,6 +4,16 @@ import commands/compile
 import commands/execute
 import commands/manage_versions
 
+proc runTests(): int =
+    for kind, path in walkDir("tests"):
+        if kind == pcFile and path.endsWith(".nim"):
+            echo "Running test: ", path
+            let result = execShellCmd("nim c -r " & path)
+            if result != 0:
+                echo "Test failed: ", path
+                return 1
+    return 0
+
 proc main() =
     if paramCount() < 2:
         echo "Usage: java-tool <command> [options]"
@@ -12,6 +22,8 @@ proc main() =
     let command = paramStr(1)
 
     case command:
+    of "test":
+        quit(runTests())
     of "compile":
         if paramCount() != 3:
             echo "Usage: java-tool compile <javaFile>"
