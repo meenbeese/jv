@@ -4,6 +4,7 @@ import commands/compile
 import commands/execute
 import commands/manage
 import commands/install
+import commands/options
 import utils/shell_commands
 
 proc runTests(): int =
@@ -18,12 +19,15 @@ proc runTests(): int =
 
 proc main() =
     if paramCount() < 1:
-        echo "Usage: jv <command> [options]"
+        printHelp()
         quit(1)
 
     let command = paramStr(1)
 
     case command:
+    of "help":
+        printHelp()
+        quit(0)
     of "test":
         quit(runTests())
     of "compile":
