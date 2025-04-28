@@ -1,75 +1,98 @@
-# Java Tool
+# Java Tool (jv)
 
-Java Tool is a command-line utility designed to manage Java versions and facilitate the compilation and execution of Java programs. It provides a simple interface for users to work with different Java versions and streamline their development workflow.
+A Java version manager and build tool written in Nim. Supports Windows, macOS, and Linux.
 
 ## Features
 
-- **Cross-Platform Support**: Works on Windows, macOS, and Linux
-- **Flexible Version Management**: Supports multiple version managers:
-  - jEnv (macOS/Linux)
-  - Jabba (all platforms)
-  - Manual management with environment variables (Windows fallback)
-- **Compile Java Programs**: Compile Java source files using the `javac` command
-- **Execute Java Programs**: Run compiled Java programs with the `java` command
-- **File Operations**: Utility functions for file management
-
-## Prerequisites
-
-- **Windows**: Java installation, optionally Jabba
-- **macOS**: Java installation, jEnv or Jabba recommended
-- **Linux**: Java installation, jEnv or Jabba recommended
+- Version Management
+  - Install and manage multiple Java versions
+  - Switch between Java versions easily
+  - Supports Jabba (all platforms) and jEnv (macOS/Linux)
+- Build Tools
+  - Compile Java source files
+  - Execute Java programs
+  - Run tests
+- Cross-Platform
+  - Windows support with PowerShell integration
+  - macOS and Linux support
+  - Consistent experience across platforms
 
 ## Installation
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/meenbeese/jv.git
-   ```
-2. Navigate to the project directory:
-   ```
-   cd jv
-   ```
-3. Install Nim from [Nim's official website](https://nim-lang.org/)
-4. Build the project:
-   ```
-   nim compile --run src/main.nim
-   ```
+### Prerequisites
+
+- Nim compiler (https://nim-lang.org/)
+- Git
+- PowerShell (Windows) or Bash/Zsh (macOS/Linux)
+
+### Windows
+
+```powershell
+# Clone the repository
+git clone https://github.com/meenbeese/jv.git
+cd jv
+
+# Run the install script
+.\install.ps1
+```
+
+### macOS/Linux
+
+```bash
+# Clone the repository
+git clone https://github.com/meenbeese/jv.git
+cd jv
+
+# Run the install script
+chmod +x install.sh
+./install.sh
+```
+
+After installation, restart your terminal and run `jv help` to verify the installation.
 
 ## Usage
 
-```
-jv <command> [options]
-```
+### Basic Commands
 
-### Commands
+```bash
+# Show help
+jv help
 
-- `compile`: Compiles a Java file
-- `execute`: Executes a compiled Java program
-- `manage`: Manages Java versions
-
-## Examples
-
-Compile a Java file:
-```
+# Compile a Java file
 jv compile MyProgram.java
-```
 
-Execute a compiled Java program:
-```
+# Execute a compiled program
 jv execute MyProgram
+
+# List installed Java versions
+jv manage list
+
+# Install a new Java version
+jv manage install 1.11.0-openjdk
+
+# Set active Java version
+jv manage set 1.11.0-openjdk
+
+# Install version manager (if needed)
+jv manage setup
 ```
 
-Manage Java versions:
-```
-jv manage list
-jv manage install 11
-jv manage set 11
-```
+### Version Management
+
+The tool supports two version managers:
+- Jabba: Available on all platforms, recommended for Windows
+- jEnv: Available on macOS and Linux
+
+The appropriate version manager will be installed automatically when needed.
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-MIT License - see LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.

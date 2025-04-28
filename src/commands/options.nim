@@ -1,5 +1,5 @@
 proc printHelp*() =
-  echo "\nManage Java versions and projects"
+  echo "\nA Java version manager and build tool written in Nim"
   echo "\nUsage: jv <command> [options]"
   echo "\nCommands:"
   echo "  compile <javaFile>         Compile a Java file"

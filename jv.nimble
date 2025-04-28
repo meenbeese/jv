@@ -1,7 +1,7 @@
 # Package
 version       = "0.1.0"
 author        = "Kuzey Bilgin"
-description   = "Java version manager and build tool"
+description   = "A Java version manager and build tool written in Nim"
 license       = "MIT"
 srcDir        = "src"
 bin           = @["jv"]
