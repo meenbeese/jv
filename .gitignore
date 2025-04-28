@@ -1,0 +1,20 @@
+# Nim
+nimcache/
+nimblecache/
+htmldocs/
+
+# Java
+*.java
+*.class
+*.jar
+
+# Executable files
+*.exe
+*.out
+*.so
+*.dll
+*.dylib
+*.dmg
+
+# Other files
+$null
