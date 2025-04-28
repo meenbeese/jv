@@ -2,7 +2,7 @@ import std/os except execShellCmd
 import std/strutils
 import commands/compile
 import commands/execute
-import commands/manage_versions
+import commands/manage
 import commands/install
 import utils/shell_commands
 

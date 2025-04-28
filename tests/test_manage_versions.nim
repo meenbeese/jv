@@ -1,4 +1,4 @@
-import src/commands/manage_versions
+import src/commands/manage
 
 proc testListVersions() =
     let versions = listVersions()
