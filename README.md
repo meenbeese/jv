@@ -58,6 +58,9 @@ After installation, restart your terminal and run `jv help` to verify the instal
 # Show help
 jv help
 
+# Initialize a new Java project with Gradle
+jv init
+
 # Compile a Java file
 jv compile MyProgram.java
 
@@ -75,6 +78,20 @@ jv manage set 1.11.0-openjdk
 
 # Install version manager (if needed)
 jv manage setup
+```
+
+### Project Initialization
+
+The `init` command sets up a new Java project with:
+- Gradle build system using Kotlin DSL
+- Standard Maven project structure
+- JUnit 5 testing support
+- Package name based on reversed domain (e.g., com.example becomes example.com)
+- Sample App class and test
+
+```bash
+jv init
+# Enter your domain when prompted
 ```
 
 ### Version Management

@@ -4,6 +4,7 @@ import commands/compile
 import commands/execute
 import commands/manage
 import commands/install
+import commands/init
 import commands/options
 import utils/shell_commands
 
@@ -28,6 +29,8 @@ proc main() =
     of "help":
         printHelp()
         quit(0)
+    of "init":
+        quit(initProject())
     of "test":
         quit(runTests())
     of "compile":

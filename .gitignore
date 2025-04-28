@@ -8,6 +8,10 @@ htmldocs/
 *.class
 *.jar
 
+# Kotlin
+*.kt
+*.kts
+
 # Executable files
 *.exe
 *.out
