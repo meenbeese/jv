@@ -18,3 +18,10 @@ htmldocs/
 
 # Other files
 $null
+
+# Binary directory
+bin/
+
+# Keep install scripts
+!install.ps1
+!install.sh
