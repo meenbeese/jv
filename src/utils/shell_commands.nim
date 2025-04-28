@@ -1,5 +1,6 @@
 import std/osproc
 import std/strutils
+from std/os import fileExists
 
 proc normalizeCmd(cmd: string): string =
     when defined(windows):
@@ -7,13 +8,16 @@ proc normalizeCmd(cmd: string): string =
     else:
         cmd.replace("\\", "/")
 
-proc execShellCmd*(command: string): int =
+proc execShellCmd*(command: string; silent: bool = false): int =
     let normalizedCmd = normalizeCmd(command)
+    if not silent:
+        when defined(windows):
+            echo "Executing on Windows: ", normalizedCmd
+        else:
+            echo "Executing on Unix-like system: ", normalizedCmd
     when defined(windows):
-        echo "Executing on Windows: ", normalizedCmd
         result = execCmd("cmd /c " & normalizedCmd)
     else:
-        echo "Executing on Unix-like system: ", normalizedCmd
         result = execCmd("/bin/sh -c '" & normalizedCmd & "'")
 
 proc execCmdEx*(command: string): tuple[output: string, exitCode: int] =

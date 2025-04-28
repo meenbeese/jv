@@ -3,6 +3,7 @@ import std/strutils
 import commands/compile
 import commands/execute
 import commands/manage_versions
+import commands/install
 import utils/shell_commands
 
 proc runTests(): int =
@@ -37,10 +38,14 @@ proc main() =
         quit(executeJava(paramStr(2)))
     of "manage":
         if paramCount() < 2:
-            echo "Usage: jv manage <list|install|set> [version]"
+            echo "Usage: jv manage <list|install|set|setup> [version]"
             quit(1)
         let subcommand = paramStr(2)
         case subcommand:
+        of "setup":
+            let status = ensureVersionManager()
+            echo status.message
+            quit(if status.success: 0 else: 1)
         of "list":
             let versions = listVersions()
             for version in versions:
