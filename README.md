@@ -1,4 +1,4 @@
-# Java Tool (jv)
+# jv
 
 A Java version manager and build tool written in Nim. Supports Windows, macOS, and Linux.
 
@@ -21,13 +21,13 @@ A Java version manager and build tool written in Nim. Supports Windows, macOS, a
 
 ### Prerequisites
 
-- Nim compiler (https://nim-lang.org/)
+- Nim compiler (<https://nim-lang.org/>)
 - Git
 - PowerShell (Windows) or Bash/Zsh (macOS/Linux)
 
 ### Windows
 
-```powershell
+```sh
 # Clone the repository
 git clone https://github.com/meenbeese/jv.git
 cd jv
@@ -38,7 +38,7 @@ cd jv
 
 ### macOS/Linux
 
-```bash
+```sh
 # Clone the repository
 git clone https://github.com/meenbeese/jv.git
 cd jv
@@ -54,7 +54,7 @@ After installation, restart your terminal and run `jv help` to verify the instal
 
 ### Basic Commands
 
-```bash
+```sh
 # Show help
 jv help
 
@@ -74,10 +74,10 @@ jv execute MyProgram
 jv manage list
 
 # Install a new Java version
-jv manage install 1.11.0-openjdk
+jv manage install openjdk@1.9.0-4
 
 # Set active Java version
-jv manage set 1.11.0-openjdk
+jv manage set openjdk@1.9.0-4
 
 # Install version manager (if needed)
 jv manage setup
@@ -86,13 +86,14 @@ jv manage setup
 ### Project Initialization
 
 The `init` command sets up a new Java project with:
+
 - Gradle build system using Kotlin DSL
 - Standard Maven project structure
 - JUnit 5 testing support
 - Package name based on reversed domain (e.g., com.example becomes example.com)
 - Sample App class and test
 
-```bash
+```sh
 jv init
 # Enter your domain when prompted
 ```
@@ -100,6 +101,7 @@ jv init
 ### Version Management
 
 The tool supports two version managers:
+
 - Jabba: Available on all platforms, recommended for Windows
 - jEnv: Available on macOS and Linux
 
