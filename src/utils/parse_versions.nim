@@ -42,12 +42,16 @@ proc printVersionTable*(versions: seq[string]) =
     echo "═══════════════════════\n"
     
     for dist in versionMap.keys.toSeq.sorted():
+        if dist == "default" or versionMap[dist].len == 0:
+            continue
+            
         echo "Distribution: ", dist.toUpper()
         echo "───────────────────────"
         
         # Group versions by major version
         var majorVersions: Table[int, seq[JavaVersion]]
         for v in versionMap[dist]:
+            if v.fullVersion.strip().len == 0: continue
             if not majorVersions.hasKey(v.majorVersion):
                 majorVersions[v.majorVersion] = @[]
             majorVersions[v.majorVersion].add(v)
