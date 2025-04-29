@@ -8,7 +8,7 @@ proc normalizeCmd(cmd: string): string =
     else:
         cmd.replace("\\", "/")
 
-proc execShellCmd*(command: string; silent: bool = false): int =
+proc execShellCmd*(command: string; silent: bool = true): int =
     let normalizedCmd = normalizeCmd(command)
     if not silent:
         when defined(windows):
