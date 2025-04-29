@@ -58,6 +58,9 @@ After installation, restart your terminal and run `jv help` to verify the instal
 # Show help
 jv help
 
+# Show version
+jv version
+
 # Initialize a new Java project with Gradle
 jv init
 

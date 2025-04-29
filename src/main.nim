@@ -1,5 +1,6 @@
 import std/os except execShellCmd
 import std/strutils
+import std/parsecfg
 import commands/compile
 import commands/execute
 import commands/manage
@@ -7,6 +8,13 @@ import commands/install
 import commands/init
 import commands/options
 import utils/shell_commands
+
+proc getVersion(): string =
+    let nimblePath = getCurrentDir() / "jv.nimble"
+    if fileExists(nimblePath):
+        let dict = loadConfig(nimblePath)
+        return dict.getSectionValue("", "version")
+    return "unknown"
 
 proc runTests(): int =
     for kind, path in walkDir("tests"):
@@ -26,6 +34,9 @@ proc main() =
     let command = paramStr(1)
 
     case command:
+    of "version":
+        echo "jv version ", getVersion()
+        quit(0)
     of "help":
         printHelp()
         quit(0)
