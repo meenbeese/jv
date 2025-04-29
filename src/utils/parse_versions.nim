@@ -7,6 +7,7 @@ type JavaVersion* = object
     distribution*: string
     fullVersion*: string
     majorVersion*: int
+    vmType*: string
 
 proc extractMajorVersion(version: string): int =
     let parts = version.split('.')
@@ -21,9 +22,14 @@ proc parseVersion*(version: string): JavaVersion =
     let parts = version.split('@')
     var versionStr = version
     if parts.len > 1:
-        result.distribution = parts[0]
-        result.fullVersion = version
-        versionStr = parts[1]
+        case parts[0].toLowerAscii()
+        of "openjdk-ri", "adopt-openj9", "graalvm-dev",
+           "graalvm-ce-java8", "graalvm-ce-java11", "graalvm-ce-java16": 
+            return JavaVersion(distribution: "", fullVersion: "", majorVersion: 0)
+        else:
+            result.distribution = parts[0]
+            result.fullVersion = version
+            versionStr = parts[1]
     else:
         result.distribution = "default"
         result.fullVersion = version
@@ -34,6 +40,7 @@ proc printVersionTable*(versions: seq[string]) =
     
     for version in versions:
         let parsed = parseVersion(version.strip())
+        if parsed.distribution.len == 0: continue
         if not versionMap.hasKey(parsed.distribution):
             versionMap[parsed.distribution] = @[]
         versionMap[parsed.distribution].add(parsed)
@@ -48,19 +55,14 @@ proc printVersionTable*(versions: seq[string]) =
         echo "Distribution: ", dist.toUpper()
         echo "───────────────────────"
         
-        # Group versions by major version
-        var majorVersions: Table[int, seq[JavaVersion]]
+        # Group versions by major version and keep only latest
+        var latestVersions: Table[int, JavaVersion]
         for v in versionMap[dist]:
-            if v.fullVersion.strip().len == 0: continue
-            if not majorVersions.hasKey(v.majorVersion):
-                majorVersions[v.majorVersion] = @[]
-            majorVersions[v.majorVersion].add(v)
+            if not latestVersions.hasKey(v.majorVersion) or
+               latestVersions[v.majorVersion].fullVersion < v.fullVersion:
+                latestVersions[v.majorVersion] = v
         
-        # Sort major versions in descending order
-        let sortedMajors = majorVersions.keys.toSeq.sorted(Descending)
-        for major in sortedMajors:
-            # For each major version, show only the latest version
-            let versions = majorVersions[major]
-            let latest = versions.sortedByIt(it.fullVersion)[^1]
-            echo "  • ", latest.fullVersion
+        # Display versions sorted by major version
+        for v in latestVersions.values.toSeq.sortedByIt(it.majorVersion).reversed():
+            echo "  • ", v.fullVersion
         echo ""
