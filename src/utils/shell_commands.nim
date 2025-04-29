@@ -1,6 +1,5 @@
 import std/osproc
 import std/strutils
-from std/os import fileExists
 
 proc normalizeCmd(cmd: string): string =
     when defined(windows):

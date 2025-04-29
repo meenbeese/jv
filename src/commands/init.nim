@@ -1,8 +1,6 @@
 import std/os except execShellCmd
 import std/strutils
 import std/rdstdin
-import std/sequtils
-import ../utils/shell_commands
 
 proc getDomainName(): string =
     result = readLineFromStdin("Enter your domain name (e.g., example.com): ").strip()
