@@ -1,6 +1,7 @@
 import std/os except execShellCmd, execCmdEx
 import std/strutils
 import ../utils/shell_commands
+import ../utils/parse_versions
 import install
 
 type JavaVersionManager = enum
@@ -76,20 +77,22 @@ proc listVersions*(): seq[string] =
                 return output.output.splitLines()
     return @[]
 
-proc searchVersions*(): seq[string] =
+proc searchVersions*(): int =
     case getVersionManager()
     of JEnv:
         echo "jEnv doesn't support remote version listing. Please visit https://adoptium.net for available versions."
-        return @[]
+        return 1
     of Jabba:
         let jabbaCmd = getJabbaCmd()
         let output = execCmdEx(jabbaCmd & " ls-remote")
         if output.exitCode == 0:
-            return output.output.splitLines()
+            let versions = output.output.splitLines()
+            printVersionTable(versions)
+            return 0
     of Manual:
         echo "Please visit https://adoptium.net for available versions."
-        return @[]
-    return @[]
+        return 1
+    return 1
 
 proc installVersion*(version: string): bool =
     if not ensureVersionManagerExists():

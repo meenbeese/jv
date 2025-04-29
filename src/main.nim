@@ -70,10 +70,7 @@ proc main() =
                 echo version
             quit(0)
         of "search":
-            let versions = searchVersions()
-            for version in versions:
-                echo version
-            quit(0)
+            quit(searchVersions())
         of "install":
             if paramCount() != 3:
                 echo "Usage: jv manage install <version>"
