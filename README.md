@@ -65,19 +65,19 @@ jv version
 jv init
 
 # Compile a Java file
-jv compile MyProgram.java
+jv compile App.java
 
 # Execute a compiled program
-jv execute MyProgram
+jv execute App
 
 # List installed Java versions
 jv manage list
 
 # Install a new Java version
-jv manage install openjdk@1.9.0-4
+jv manage install openjdk@1.17.0
 
 # Set active Java version
-jv manage set openjdk@1.9.0-4
+jv manage set openjdk@1.17.0
 
 # Install version manager (if needed)
 jv manage setup
