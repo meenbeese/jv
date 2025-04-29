@@ -117,7 +117,46 @@ proc setVersion*(version: string): bool =
         return execShellCmd("jenv global " & version) == 0
     of Jabba:
         let jabbaCmd = getJabbaCmd()
-        return execShellCmd(jabbaCmd & " use " & version) == 0
+        when defined(windows):
+            discard execShellCmd(jabbaCmd & " install " & version & " 2>$null")
+            
+            let jabbaRoot = getEnv("USERPROFILE") / ".jabba"
+            let scriptPath = jabbaRoot / "jabba.ps1"
+            
+            if fileExists(scriptPath):
+                if execShellCmd(jabbaCmd & " use " & version) != 0:
+                    return false
+
+                let javaHome = execCmdEx(jabbaCmd & " which " & version).output.strip()
+                if javaHome.len > 0:
+                    # Set JAVA_HOME in user environment
+                    discard execShellCmd("setx JAVA_HOME \"" & javaHome & "\"")
+                    
+                    # Update PATH to include the new Java bin directory (user-level only)
+                    let binPath = javaHome / "bin"
+                    discard execShellCmd("powershell -Command \"" &
+                        # Get User PATH only
+                        "$userPath = [Environment]::GetEnvironmentVariable('PATH', 'User'); " &
+                        
+                        # Remove any existing Java paths
+                        "$cleanUserPath = ($userPath.Split(';') | Where-Object { " &
+                        "    $_ -notmatch 'java|jdk|jre|Program Files.*\\\\Java|Program Files.*\\\\Microsoft\\\\jdk' " &
+                        "}) -join ';'; " &
+                        
+                        # Put new Java path at the start of User PATH
+                        "$newUserPath = '" & binPath.replace("\\", "/") & ";' + $cleanUserPath; " &
+                        "[Environment]::SetEnvironmentVariable('PATH', $newUserPath, 'User'); " &
+                        
+                        # Update current session
+                        "$env:JAVA_HOME = '" & javaHome.replace("\\", "/") & "'; " &
+                        "$env:PATH = '" & binPath.replace("\\", "/") & ";' + " &
+                        "($env:PATH.Split(';') | Where-Object { " &
+                        "    $_ -notmatch 'java|jdk|jre|Program Files.*\\\\Java|Program Files.*\\\\Microsoft\\\\jdk' " &
+                        "} | ForEach-Object { $_ }) -join ';'\"")
+                    return true
+            return false
+        else:
+            return execShellCmd(jabbaCmd & " use " & version) == 0
     of Manual:
         when defined(windows):
             return execShellCmd("setx JAVA_HOME \"" & version & "\"") == 0

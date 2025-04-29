@@ -87,6 +87,14 @@ proc main() =
                 quit(1)
             if setVersion(paramStr(3)):
                 echo "Successfully set Java version to ", paramStr(3)
+                when defined(windows):
+                    echo "\nTo use the new version, either:"
+                    echo "1. Start a new terminal session"
+                    echo "2. Run 'RefreshEnv' in PowerShell"
+                else:
+                    echo "\nTo use the new version, either:"
+                    echo "1. Start a new terminal session"
+                    echo "2. Run 'source ~/.bashrc' (bash) or 'source ~/.zshrc' (zsh)"
                 quit(0)
             else:
                 echo "Failed to set Java version to ", paramStr(3)
