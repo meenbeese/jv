@@ -7,6 +7,7 @@ proc printHelp*() =
   echo "  execute <className>        Execute a compiled Java class"
   echo "  manage <subcommand> [...]  Manage Java versions and tools"
   echo "    subcommands:"
+  echo "      search                 List available Java versions to install"
   echo "      list                   List installed Java versions"
   echo "      install <version>      Install a Java version"
   echo "      set <version>          Set the active Java version"

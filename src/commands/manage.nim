@@ -76,6 +76,21 @@ proc listVersions*(): seq[string] =
                 return output.output.splitLines()
     return @[]
 
+proc searchVersions*(): seq[string] =
+    case getVersionManager()
+    of JEnv:
+        echo "jEnv doesn't support remote version listing. Please visit https://adoptium.net for available versions."
+        return @[]
+    of Jabba:
+        let jabbaCmd = getJabbaCmd()
+        let output = execCmdEx(jabbaCmd & " ls-remote")
+        if output.exitCode == 0:
+            return output.output.splitLines()
+    of Manual:
+        echo "Please visit https://adoptium.net for available versions."
+        return @[]
+    return @[]
+
 proc installVersion*(version: string): bool =
     if not ensureVersionManagerExists():
         return false
