@@ -56,7 +56,7 @@ proc main() =
         quit(executeJava(paramStr(2)))
     of "manage":
         if paramCount() < 2:
-            echo "Usage: jv manage <list|search|install|set|setup> [version]"
+            echo "Usage: jv manage <list|search|install|uninstall|set|setup> [version]"
             quit(1)
         let subcommand = paramStr(2)
         case subcommand:
@@ -80,6 +80,16 @@ proc main() =
                 quit(0)
             else:
                 echo "Failed to install Java ", paramStr(3)
+                quit(1)
+        of "uninstall":
+            if paramCount() != 3:
+                echo "Usage: jv manage uninstall <version>"
+                quit(1)
+            if uninstallVersion(paramStr(3)):
+                echo "Successfully uninstalled Java ", paramStr(3)
+                quit(0)
+            else:
+                echo "Failed to uninstall Java ", paramStr(3)
                 quit(1)
         of "set":
             if paramCount() != 3:

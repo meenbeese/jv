@@ -170,3 +170,20 @@ proc setVersion*(version: string): bool =
             return execShellCmd("setx JAVA_HOME \"" & version & "\"") == 0
         else:
             return execShellCmd("export JAVA_HOME=" & version) == 0
+
+proc uninstallVersion*(version: string): bool =
+    if not ensureVersionManagerExists():
+        return false
+    
+    case getVersionManager()
+    of JEnv:
+        return execShellCmd("jenv remove " & version) == 0
+    of Jabba:
+        let jabbaCmd = getJabbaCmd()
+        when defined(windows):
+            return execShellCmd(jabbaCmd & " uninstall " & version & " >nul 2>&1") == 0
+        else:
+            return execShellCmd(jabbaCmd & " uninstall " & version & " >/dev/null 2>&1") == 0
+    of Manual:
+        echo "Manual version management does not support uninstallation"
+        return false
