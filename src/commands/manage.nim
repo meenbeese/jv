@@ -164,6 +164,33 @@ proc uninstallVersion*(version: string): bool =
         else:
             return execShellCmd(jabbaCmd & " uninstall " & version & " >/dev/null 2>&1") == 0
 
+proc checkSystemJava(): string =
+    when defined(windows):
+        let javaCheck = execCmdEx("powershell -NoProfile -NonInteractive -Command \"" &
+            "try { " &
+            "    $javaPath = (Get-Command java -ErrorAction Stop).Path; " &
+            "    if ($javaPath -notmatch '.jabba') { " &
+            "        Write-Output 'System Java detected at:'; " &
+            "        Write-Output $javaPath; " &
+            "        Write-Output ''; " &
+            "        Write-Output 'Version information:'; " &
+            "        $version = & $javaPath -version 2>&1; " &
+            "        $version | ForEach-Object { Write-Output $_.ToString() }; " &
+            "    }" &
+            "} catch { " &
+            "    exit 0; " &
+            "}\"")
+        
+        if javaCheck.exitCode == 0 and javaCheck.output.len > 0:
+            return "\nWarning: System-wide Java installation detected!\n\n" & 
+                   javaCheck.output & 
+                   "\nThis may interfere with jv's version management." &
+                   "\nTo fix this:" &
+                   "\n1. Uninstall Oracle JDK/JRE from Windows Settings > Apps" &
+                   "\n2. Remove Java entries from System PATH" &
+                   "\n3. Restart your terminal\n"
+    return ""
+
 proc getCurrentVersion*(): string =
     case getVersionManager()
     of JEnv:
@@ -173,21 +200,35 @@ proc getCurrentVersion*(): string =
     of Jabba:
         let jabbaCmd = getJabbaCmd()
         try:
-            let output = execCmdEx(jabbaCmd & " current 2>&1")
-            if output.exitCode == 0 and output.output.strip().len > 0:
-                return output.output.strip()
+            let systemJava = checkSystemJava()
             
-            let javaOutput = execCmdEx("java -version 2>&1")
-            if javaOutput.exitCode == 0:
-                return javaOutput.output.strip()
+            let currentOutput = execCmdEx(jabbaCmd & " current")
+            if currentOutput.exitCode == 0 and currentOutput.output.strip().len > 0:
+                let jabbaVersion = currentOutput.output.strip()
+                let whichOutput = execCmdEx(jabbaCmd & " which " & jabbaVersion)
+                if whichOutput.exitCode == 0:
+                    let expectedJavaHome = whichOutput.output.strip()
+                    let actualJavaHome = getEnv("JAVA_HOME")
+                    
+                    var result = jabbaVersion
+                    if actualJavaHome != expectedJavaHome:
+                        result &= "\nWarning: System JAVA_HOME mismatch!\n" &
+                                "Expected: " & expectedJavaHome & "\n" &
+                                "Actual: " & actualJavaHome
+                    
+                    if systemJava.len > 0:
+                        result &= "\n" & systemJava
+                    
+                    return result
             
-            let javaHome = getEnv("JAVA_HOME")
-            if javaHome.len > 0:
-                let binJava = javaHome / "bin" / "java"
-                if fileExists(binJava):
-                    let javaVerOutput = execCmdEx(binJava & " -version 2>&1")
-                    if javaVerOutput.exitCode == 0:
-                        return javaVerOutput.output.strip()
+            var result = "No Java version selected in Jabba\n" &
+                        "JAVA_HOME=" & getEnv("JAVA_HOME")
+            
+            if systemJava.len > 0:
+                result &= "\n" & systemJava
+            
+            return result
+            
         except:
             echo "Error checking Java version: ", getCurrentExceptionMsg()
     
