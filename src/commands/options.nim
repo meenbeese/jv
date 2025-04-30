@@ -13,7 +13,6 @@ proc printHelp*() =
   echo "      install <version>      Install a Java version"
   echo "      uninstall <version>    Uninstall a Java version"
   echo "      set <version>          Set the active Java version"
-  echo "      setup                  Install a version manager (Jabba/jEnv)"
   echo "  test                       Run all tests in the tests/ directory"
   echo "  help                       Show this help message"
   echo "  version                    Show jv version\n"

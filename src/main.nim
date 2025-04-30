@@ -56,14 +56,10 @@ proc main() =
         quit(executeJava(paramStr(2)))
     of "manage":
         if paramCount() < 2:
-            echo "Usage: jv manage <list|search|current|install|uninstall|set|setup> [version]"
+            echo "Usage: jv manage <list|search|current|install|uninstall|set> [version]"
             quit(1)
         let subcommand = paramStr(2)
         case subcommand:
-        of "setup":
-            let status = ensureVersionManager()
-            echo status.message
-            quit(if status.success: 0 else: 1)
         of "list":
             let versions = listVersions()
             for version in versions:
