@@ -8,7 +8,7 @@ bin           = @["jv"]
 installExt    = @["nim"]
 
 # Dependencies
-requires "nim >= 1.6.0"
+requires "nim >= 2.0.0"
 
 task test, "Run all tests":
   exec "nim c -r src/main.nim test"
