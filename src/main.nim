@@ -56,7 +56,7 @@ proc main() =
         quit(executeJava(paramStr(2)))
     of "manage":
         if paramCount() < 2:
-            echo "Usage: jv manage <list|search|install|uninstall|set|setup> [version]"
+            echo "Usage: jv manage <list|search|current|install|uninstall|set|setup> [version]"
             quit(1)
         let subcommand = paramStr(2)
         case subcommand:
@@ -69,6 +69,14 @@ proc main() =
             for version in versions:
                 echo version
             quit(0)
+        of "current":
+            let currentVersion = getCurrentVersion()
+            if currentVersion.len > 0:
+                echo currentVersion
+                quit(0)
+            else:
+                echo "No Java version currently selected"
+                quit(1)
         of "search":
             quit(searchVersions())
         of "install":

@@ -163,3 +163,16 @@ proc uninstallVersion*(version: string): bool =
             return execShellCmd(jabbaCmd & " uninstall " & version & " >nul 2>&1") == 0
         else:
             return execShellCmd(jabbaCmd & " uninstall " & version & " >/dev/null 2>&1") == 0
+
+proc getCurrentVersion*(): string =
+    case getVersionManager()
+    of JEnv:
+        let output = execCmdEx("jenv version")
+        if output.exitCode == 0:
+            return output.output.strip()
+    of Jabba:
+        let jabbaCmd = getJabbaCmd()
+        let output = execCmdEx(jabbaCmd & " current")
+        if output.exitCode == 0:
+            return output.output.strip()
+    return ""

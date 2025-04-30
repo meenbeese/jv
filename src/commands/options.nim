@@ -9,6 +9,7 @@ proc printHelp*() =
   echo "    subcommands:"
   echo "      search                 List available Java versions to install"
   echo "      list                   List currently installed Java versions"
+  echo "      current                Show currently active Java version"
   echo "      install <version>      Install a Java version"
   echo "      uninstall <version>    Uninstall a Java version"
   echo "      set <version>          Set the active Java version"
