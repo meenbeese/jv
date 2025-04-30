@@ -172,7 +172,23 @@ proc getCurrentVersion*(): string =
             return output.output.strip()
     of Jabba:
         let jabbaCmd = getJabbaCmd()
-        let output = execCmdEx(jabbaCmd & " current")
-        if output.exitCode == 0:
-            return output.output.strip()
-    return ""
+        try:
+            let output = execCmdEx(jabbaCmd & " current 2>&1")
+            if output.exitCode == 0 and output.output.strip().len > 0:
+                return output.output.strip()
+            
+            let javaOutput = execCmdEx("java -version 2>&1")
+            if javaOutput.exitCode == 0:
+                return javaOutput.output.strip()
+            
+            let javaHome = getEnv("JAVA_HOME")
+            if javaHome.len > 0:
+                let binJava = javaHome / "bin" / "java"
+                if fileExists(binJava):
+                    let javaVerOutput = execCmdEx(binJava & " -version 2>&1")
+                    if javaVerOutput.exitCode == 0:
+                        return javaVerOutput.output.strip()
+        except:
+            echo "Error checking Java version: ", getCurrentExceptionMsg()
+    
+    return "No Java version detected"
