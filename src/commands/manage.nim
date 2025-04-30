@@ -6,8 +6,7 @@ import install
 
 type JavaVersionManager = enum
     JEnv, # macOS and Linux
-    Jabba, # All platforms
-    Manual # Windows fallback
+    Jabba  # All platforms
 
 proc getVersionManager(): JavaVersionManager =
     when defined(windows):
@@ -18,13 +17,13 @@ proc getVersionManager(): JavaVersionManager =
         let jabbaExe = getEnv("USERPROFILE") / ".jabba" / "bin" / "jabba.exe"
         if fileExists(jabbaExe):
             return Jabba
-        return Manual
+        return Jabba
     else:
         if execShellCmd("which jenv", true) == 0:
             return JEnv
         elif execShellCmd("which jabba", true) == 0:
             return Jabba
-        return Manual
+        return Jabba
 
 proc getJabbaCmd*(): string =
     when defined(windows):
@@ -66,15 +65,6 @@ proc listVersions*(): seq[string] =
         let output = execCmdEx(fullCmd)
         if output.exitCode == 0:
             return output.output.splitLines()
-    of Manual:
-        when defined(windows):
-            let output = execCmdEx("dir /B \"%JAVA_HOME%\"")
-            if output.exitCode == 0:
-                return output.output.splitLines()
-        else:
-            let output = execCmdEx("/usr/libexec/java_home -V")
-            if output.exitCode == 0:
-                return output.output.splitLines()
     return @[]
 
 proc searchVersions*(): int =
@@ -89,9 +79,6 @@ proc searchVersions*(): int =
             let versions = output.output.splitLines()
             printVersionTable(versions)
             return 0
-    of Manual:
-        echo "Please visit https://adoptium.net for available versions."
-        return 1
     return 1
 
 proc installVersion*(version: string): bool =
@@ -111,9 +98,6 @@ proc installVersion*(version: string): bool =
                 return execShellCmd(jabbaCmd & " install " & version & " >nul 2>&1") == 0
             else:
                 return execShellCmd(jabbaCmd & " install " & version & " >/dev/null 2>&1") == 0
-        return false
-    of Manual:
-        echo "Please install Java " & version & " manually from https://adoptium.net"
         return false
 
 proc setVersion*(version: string): bool =
@@ -165,11 +149,6 @@ proc setVersion*(version: string): bool =
             return false
         else:
             return execShellCmd(jabbaCmd & " use " & version) == 0
-    of Manual:
-        when defined(windows):
-            return execShellCmd("setx JAVA_HOME \"" & version & "\"") == 0
-        else:
-            return execShellCmd("export JAVA_HOME=" & version) == 0
 
 proc uninstallVersion*(version: string): bool =
     if not ensureVersionManagerExists():
@@ -184,6 +163,3 @@ proc uninstallVersion*(version: string): bool =
             return execShellCmd(jabbaCmd & " uninstall " & version & " >nul 2>&1") == 0
         else:
             return execShellCmd(jabbaCmd & " uninstall " & version & " >/dev/null 2>&1") == 0
-    of Manual:
-        echo "Manual version management does not support uninstallation"
-        return false
