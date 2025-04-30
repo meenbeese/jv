@@ -103,7 +103,15 @@ proc installVersion*(version: string): bool =
         return execShellCmd("jenv add " & version) == 0
     of Jabba:
         let jabbaCmd = getJabbaCmd()
-        return execShellCmd(jabbaCmd & " install " & version) == 0
+        let urlOutput = execCmdEx(jabbaCmd & " ls-remote " & version)
+        if urlOutput.exitCode == 0:
+            let url = urlOutput.output.strip()
+            echo "Downloading " & version & " (" & url & ")"
+            when defined(windows):
+                return execShellCmd(jabbaCmd & " install " & version & " >nul 2>&1") == 0
+            else:
+                return execShellCmd(jabbaCmd & " install " & version & " >/dev/null 2>&1") == 0
+        return false
     of Manual:
         echo "Please install Java " & version & " manually from https://adoptium.net"
         return false
