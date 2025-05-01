@@ -19,13 +19,21 @@ A Java version manager and build tool written in Nim. Supports Windows, macOS, a
 
 ## Installation
 
-### Prerequisites
+### Using Nimble
+
+```sh
+nimble install jv
+```
+
+### Manual Installation
+
+#### Prerequisites
 
 - Nim compiler (<https://nim-lang.org/>)
 - Git
 - PowerShell (Windows) or Bash/Zsh (macOS/Linux)
 
-### Windows
+#### Windows
 
 ```sh
 # Clone the repository
@@ -36,7 +44,7 @@ cd jv
 .\install.ps1
 ```
 
-### macOS/Linux
+#### macOS/Linux
 
 ```sh
 # Clone the repository
